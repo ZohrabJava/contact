@@ -17,6 +17,23 @@ public class Contacts {
         this.emailEmailType = new TreeMap<>();
     }
 
+    public String deleteSpace(String str){
+        StringBuilder ret= new StringBuilder();
+        for(int i=0;i<str.length();i++){
+            if(str.charAt(i)!=' '){
+                ret.append(str.charAt(i));
+            }
+        }
+        return ret.toString();
+    }
+    public boolean contains(String str,Map<String,String> map){
+        for(String s: map.keySet()){
+            if(deleteSpace(str).equals( deleteSpace(s))){
+                return true;
+            }
+        }
+        return false;
+    }
     public void creat() {
         Scanner scanner = new Scanner(System.in);
         User user = new User();
@@ -29,13 +46,13 @@ public class Contacts {
         String phone;
         do {
             phone = scanner.nextLine();
-            if (numberName.containsKey(phone)) {
+            if (contains(phone,numberName) ) {
                 System.out.println("This phone number is buse. Try again.");
             }
             if (!Validator.isPhoneNumber(phone)) {
                 System.out.println("Phone number is not valid");
             }
-        } while (numberName.containsKey(phone) || !Validator.isPhoneNumber(phone));
+        } while (contains(phone,numberName) || !Validator.isPhoneNumber(phone));
         user.setPhoneNumber(phone);
         numberName.put(phone, name);
         System.out.println("Input Phone Type");
@@ -83,13 +100,13 @@ public class Contacts {
             System.out.println("Input Email");
             do {
                 email = scanner.nextLine();
-                if (emailName.containsKey(email)) {
+                if (contains(email,emailName)) {
                     System.out.println("This email is buse. Try again.");
                 }
                 if (!Validator.isMail(email)) {
                     System.out.println("This email is not valid");
                 }
-            } while (emailName.containsKey(email) || !Validator.isMail(email));
+            } while (contains(email,emailName) || !Validator.isMail(email));
             user.setEmail(email);
             emailName.put(email, name);
             System.out.println("Input Email Type");
