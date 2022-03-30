@@ -146,9 +146,14 @@ public class Contacts {
                 name = scanner.nextLine();
                 for (User user : contacts) {
                     if (user.getPhoneNumber().equals(number)) {
-                        user.setName(name);
-                        emailName.put(user.getEmail(), name);
-                        numberName.put(number, name);
+                        if(user.getEmail()!=null) {
+                            user.setName(name);
+                            emailName.put(user.getEmail(), name);
+                            numberName.put(number, name);
+                        }else{
+                            user.setName(name);
+                            numberName.put(number, name);
+                        }
                     }
                 }
             }
