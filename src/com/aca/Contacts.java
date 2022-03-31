@@ -17,23 +17,6 @@ public class Contacts {
         this.emailEmailType = new TreeMap<>();
     }
 
-    public String deleteSpace(String str){
-        StringBuilder ret= new StringBuilder();
-        for(int i=0;i<str.length();i++){
-            if(str.charAt(i)!=' '){
-                ret.append(str.charAt(i));
-            }
-        }
-        return ret.toString();
-    }
-    public boolean contains(String str,Map<String,String> map){
-        for(String s: map.keySet()){
-            if(deleteSpace(str).equals( deleteSpace(s))){
-                return true;
-            }
-        }
-        return false;
-    }
     public void creat() {
         Scanner scanner = new Scanner(System.in);
         User user = new User();
@@ -41,18 +24,20 @@ public class Contacts {
         String email;
         System.out.println("Input Name");
         String name = scanner.nextLine();
-        user.setName(name);
+        name=Validator.replaceSpace( name);
+        user.setName( name);
         System.out.println("Input Phone");
         String phone;
         do {
             phone = scanner.nextLine();
-            if (contains(phone,numberName) ) {
+            phone=Validator.deleteSpace(phone);
+            if (Validator.contains(phone,numberName) ) {
                 System.out.println("This phone number is buse. Try again.");
             }
             if (!Validator.isPhoneNumber(phone)) {
                 System.out.println("Phone number is not valid");
             }
-        } while (contains(phone,numberName) || !Validator.isPhoneNumber(phone));
+        } while (Validator.contains(phone,numberName) || !Validator.isPhoneNumber(phone));
         user.setPhoneNumber(phone);
         numberName.put(phone, name);
         System.out.println("Input Phone Type");
@@ -100,13 +85,13 @@ public class Contacts {
             System.out.println("Input Email");
             do {
                 email = scanner.nextLine();
-                if (contains(email,emailName)) {
+                if (Validator.contains(email,emailName)) {
                     System.out.println("This email is buse. Try again.");
                 }
                 if (!Validator.isMail(email)) {
                     System.out.println("This email is not valid");
                 }
-            } while (contains(email,emailName) || !Validator.isMail(email));
+            } while (Validator.contains(email,emailName) || !Validator.isMail(email));
             user.setEmail(email);
             emailName.put(email, name);
             System.out.println("Input Email Type");
@@ -161,6 +146,7 @@ public class Contacts {
             if (question.equals("Y")) {
                 System.out.println("Input new name.This time name is -> " + numberName.get(number));
                 name = scanner.nextLine();
+                name=Validator.replaceSpace(name);
                 for (User user : contacts) {
                     if (user.getPhoneNumber().equals(number)) {
                         if(user.getEmail()!=null) {
@@ -312,8 +298,6 @@ public class Contacts {
                         } while (flag);
                         break;
                     }
-
-
                 }
             }
         } else {
@@ -346,5 +330,22 @@ public class Contacts {
             System.out.println("Such a phone number does not exist");
         }
     }
-
+    public void searchFromNumber(){
+        Scanner scanner=new Scanner(System.in);
+        String num=scanner.nextLine();
+        for(String s:numberName.keySet()){
+            if(Validator.deleteSpace(s).contains(Validator.deleteSpace(num))){
+                System.out.println(numberName.get(s)+":"+s);
+            }
+        }
+    }
+    public void searchFromName(){
+        Scanner scanner=new Scanner(System.in);
+        String name=scanner.nextLine();
+        for(String s:numberName.keySet()){
+            if(Validator.deleteSpace(numberName.get(s).toLowerCase()).contains(Validator.deleteSpace(name).toLowerCase())){
+                System.out.println(numberName.get(s)+":"+s);
+            }
+        }
+    }
 }
