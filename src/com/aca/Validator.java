@@ -24,7 +24,7 @@ public class Validator {
         }
         return ret.toString();
     }
-    public static   boolean contains(String str, Map<String,String> map){
+    public static  boolean contains(String str, Map<String,String> map){
         for(String s: map.keySet()){
             if(deleteSpace(str).equals( deleteSpace(s))){
                 return true;
@@ -35,8 +35,12 @@ public class Validator {
     public static boolean isMail(String mail) {
         boolean flag = false;
         for (int i = 0; i < mail.length(); i++) {
-            if (mail.charAt(i) == '@') {
+            if (mail.charAt(i) == '@'&& i!=0) {
+                i++;
                 flag = true;
+            }
+            if (flag && mail.charAt(i)=='@'){
+                return false;
             }
             if (i + 1 < mail.length() && flag && (mail.charAt(i) == '.')) {
                 return true;
@@ -44,7 +48,6 @@ public class Validator {
         }
         return false;
     }
-
     public static boolean isPhoneNumber(String phoneNumber) {
         if (phoneNumber.strip().length() == 0|| phoneNumber.substring(1,phoneNumber.length()).contains("+")) {
             return false;

@@ -1,11 +1,10 @@
 package com.aca;
 
 import java.io.*;
-import java.util.List;
 import java.util.Scanner;
 
 public class Service {
-    public static void write(Contacts contacts) {
+    public static void writeRecord(Contacts contacts) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("Contacts.txt"));
             for (User user : contacts.contacts) {
@@ -22,7 +21,7 @@ public class Service {
         }
     }
 
-    private static PhoneType getPhoneType(String[] arr){
+    private static PhoneType getPhoneTypeFrpmRecord(String[] arr){
         switch (arr[2]) {
             case "MOBILE":
                 return PhoneType.MOBILE;
@@ -35,39 +34,37 @@ public class Service {
             case "COMPANY":
                 return PhoneType.COMPANY;
             default:
-                break;
+                return null;
         }
-        return null;
     }
-    private static EmailType getEmailType(String[] arr){
-        switch (arr[4]) {
-            case "GMAIL":
-               return EmailType.GMAIL;
-            case "ICLOUD":
-                return EmailType.ICLOUD;
-            case "OTHER":
-                return EmailType.OTHER;
-            default:
-                break;
-        }
-        return null;
+    private static EmailType getEmailTypeFromRecord(String[] arr){
+        return switch (arr[4]) {
+            case "MAIL" -> EmailType.MAIL;
+            case "YAHOO" -> EmailType.YAHOO;
+            case "YANDEX" -> EmailType.YANDEX;
+            case "ACA" -> EmailType.ACA;
+            case "GMAIL" -> EmailType.GMAIL;
+            case "ICLOUD" -> EmailType.ICLOUD;
+            case "OTHER" -> EmailType.OTHER;
+            default -> null;
+        };
     }
-    private static void setNumberNameNumberType(String[] arr,Contacts contacts,User user){
+    private static void setNumberNameNumberTypeFromRecord(String[] arr, Contacts contacts, User user){
         user.setName(arr[0]);
         user.setPhoneNumber(arr[1]);
-        user.setPhoneType(getPhoneType(arr));
+        user.setPhoneType(getPhoneTypeFrpmRecord(arr));
         contacts.numberName.put(user.getPhoneNumber(), user.getName());
         contacts.numberType.put(user.getPhoneNumber(), user.getPhoneType());
     }
-    private static void setEmailEmailType(String[] arr,Contacts contacts,User user){
-        setNumberNameNumberType(arr,contacts,user);
+    private static void setEmailEmailTypeFromRecord(String[] arr, Contacts contacts, User user){
+        setNumberNameNumberTypeFromRecord(arr,contacts,user);
         user.setEmail(arr[3]);
-        user.setEmailType(getEmailType(arr));
+        user.setEmailType(getEmailTypeFromRecord(arr));
         contacts.emailName.put((user.getEmail()), user.getName());
         contacts.emailEmailType.put(user.getEmail(), user.getEmailType());
     }
 
-    public static void read(Contacts contacts) {
+    public static void readRecord(Contacts contacts) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader("Contacts.txt"));
             String element;
@@ -76,9 +73,9 @@ public class Service {
                 User user = new User();
                 arr = element.split(" ");
                 if (arr.length == 3) {
-                    setNumberNameNumberType( arr, contacts, user);
+                    setNumberNameNumberTypeFromRecord( arr, contacts, user);
                 } else if (arr.length == 5) {
-                    setEmailEmailType(arr,contacts,user);
+                    setEmailEmailTypeFromRecord(arr,contacts,user);
                 }
                 contacts.contacts.add(user);
             }
@@ -90,7 +87,7 @@ public class Service {
     public static void start() {
         Contacts contacts = new Contacts();
         Scanner scanner = new Scanner(System.in);
-        read(contacts);
+        readRecord(contacts);
         String stepOne;
         boolean flagOne;
         do {
@@ -98,9 +95,8 @@ public class Service {
             System.out.println("2. Read contact");
             System.out.println("3. Update contact");
             System.out.println("4. Delete contact");
-            System.out.println("5. Search from number");
-            System.out.println("6. Search from name");
-            System.out.println("7. Exit");
+            System.out.println("5. Search ");
+            System.out.println("6. Exit");
             flagOne = true;
             stepOne = scanner.nextLine();
             switch (stepOne) {
@@ -117,13 +113,10 @@ public class Service {
                     contacts.delete();
                     break;
                 case "5":
-                    contacts.searchFromNumber();
+                    contacts.search();
                     break;
                 case "6":
-                    contacts.searchFromName();
-                    break;
-                case "7":
-                    write(contacts);
+                    writeRecord(contacts);
                     flagOne = false;
                     break;
                 default:

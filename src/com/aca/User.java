@@ -50,19 +50,16 @@ public class User {
 
     @Override
     public String toString() {
-        if(email==null){
-            return "User{" +
-                    "Name='" + name + '\'' +
-                    ", Phone Number=" + phoneNumber +
-                    ", Phone Type=" + phoneType +
-                    '}';
+        if (email == null) {
+            return
+                    "Name  " + name  +
+                            " :  Phone Number  " + phoneNumber +
+                            " :  Group  " + phoneType ;
         }
-        return "User{" +
-                "Name='" + name + '\'' +
-                ", Phone Number=" + phoneNumber +
-                ", Phone Type=" + phoneType +
-                ", Email='" + email + '\''  +
-                ", Email Type=" + emailType +
-                '}';
+        return
+                "Name  " + name  +
+                        " :  Phone Number  " + phoneNumber +
+                        " :  Group  " + phoneType +
+                        " :  Email : "+ email + " : " + emailType ;
     }
 }
